@@ -1,0 +1,245 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Job | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="create-job-page">
+
+    <!-- =========================
+         NAVBAR
+         ========================= -->
+
+    <nav class="create-job-navbar">
+
+        <div class="create-job-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="create-job-nav-links">
+
+            <a href="{% url 'recruiter_dashboard' %}">
+                Dashboard
+            </a>
+
+            <a href="{% url 'my_jobs' %}">
+                My Jobs
+            </a>
+
+            <a href="{% url 'job_list' %}">
+                Browse Jobs
+            </a>
+
+            <a href="{% url 'recruiter' %}">
+                My Profile
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="create-job-logout">
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
+
+    <main class="create-job-container">
+
+        <!-- Header -->
+
+        <div class="create-job-page-header">
+
+            <div>
+
+                <span class="create-job-label">
+                    RECRUITER
+                </span>
+
+                <h1>
+                    Create a Job Posting
+                </h1>
+
+                <p>
+                    Add the details of the role you want to advertise.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Form Card -->
+
+        <section class="create-job-card">
+
+            <div class="create-job-card-header">
+
+                <div>
+
+                    <h2>
+                        Job Details
+                    </h2>
+
+                    <p>
+                        Provide clear information to attract the right candidates.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form method="POST" class="create-job-form">
+
+                {% csrf_token %}
+
+
+                <!-- Non-field errors -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="form-error-box">
+                        {{ form.non_field_errors }}
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Job Title -->
+
+                <div class="create-job-field">
+
+                    {{ form.title.label_tag }}
+
+                    {{ form.title }}
+
+                    {% if form.title.errors %}
+                        <div class="field-error">
+                            {{ form.title.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="create-job-field">
+
+                    {{ form.description.label_tag }}
+
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+                        <div class="field-error">
+                            {{ form.description.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Location + Salary -->
+
+                <div class="create-job-row">
+
+                    <div class="create-job-field">
+
+                        {{ form.location.label_tag }}
+
+                        {{ form.location }}
+
+                        {% if form.location.errors %}
+                            <div class="field-error">
+                                {{ form.location.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="create-job-field">
+
+                        {{ form.salary.label_tag }}
+
+                        {{ form.salary }}
+
+                        {% if form.salary.errors %}
+                            <div class="field-error">
+                                {{ form.salary.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Skills -->
+
+                <div class="create-job-field">
+
+                    {{ form.skills.label_tag }}
+
+                    {{ form.skills }}
+
+                    <small>
+                        Add skills separated by spaces, for example:
+                        Python Django React
+                    </small>
+
+                    {% if form.skills.errors %}
+                        <div class="field-error">
+                            {{ form.skills.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="create-job-actions">
+
+                    <a
+                        href="{% url 'my_jobs' %}"
+                        class="create-job-cancel"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="create-job-submit"
+                    >
+                        Publish Job →
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

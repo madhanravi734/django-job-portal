@@ -1,0 +1,189 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Browse Jobs | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="jobs-page">
+
+    <!-- Navbar -->
+    <nav class="jobs-navbar">
+
+        <div class="jobs-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="jobs-nav-links">
+
+            {% if request.user.is_authenticated %}
+
+                {% if request.user.candidateprofile %}
+                    <a href="{% url 'candidate_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'my_applications' %}">
+                        My Applications
+                    </a>
+
+                {% elif request.user.recruiterprofile %}
+                    <a href="{% url 'recruiter_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'my_jobs' %}">
+                        My Jobs
+                    </a>
+                {% endif %}
+
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="jobs-logout">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}" class="jobs-register">
+                    Register
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="jobs-container">
+
+        <div class="jobs-header">
+
+            <div>
+                <span class="jobs-label">
+                    JOB OPPORTUNITIES
+                </span>
+
+                <h1>Find your next opportunity</h1>
+
+                <p>
+                    Explore available jobs and find the right role for your career.
+                </p>
+            </div>
+
+            <div class="job-count">
+                {{ jobs|length }} Jobs
+            </div>
+
+        </div>
+
+
+        <!-- Job Listings -->
+        <div class="job-list">
+
+            {% for job in jobs %}
+
+                <div class="job-card">
+
+                    <div class="job-card-top">
+
+                        <div>
+
+                            <a href="{% url 'job_detail' job.id %}"
+                               class="job-title">
+                                {{ job.title }}
+                            </a>
+
+                            <p class="company-name">
+                                {{ job.recruiter.company_name }}
+                            </p>
+
+                        </div>
+
+                        <span class="job-type">
+                            Full Time
+                        </span>
+
+                    </div>
+
+
+                    <div class="job-info">
+
+                        <span>
+                            📍 {{ job.location }}
+                        </span>
+
+                        <span>
+                            💰 ₹{{ job.salary }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="job-description">
+
+                        <p>
+                            {{ job.description|truncatewords:25 }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="job-bottom">
+
+                        <div class="job-skills">
+
+                            {% for skill in job.skills.split %}
+                                <span>{{ skill }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                        <a href="{% url 'job_detail' job.id %}"
+                           class="view-job-button">
+                            View Job →
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-jobs">
+
+                    <div class="empty-icon">
+                        🔍
+                    </div>
+
+                    <h2>No jobs available</h2>
+
+                    <p>
+                        There are currently no job openings.
+                        Please check again later.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</body>
+</html>

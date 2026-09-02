@@ -1,0 +1,139 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="register-page">
+
+    <div class="register-wrapper">
+
+        <!-- Left Side -->
+        <div class="register-brand">
+
+            <div class="brand-content">
+
+                <div class="brand-logo">JP</div>
+
+                <h1>Job Portal</h1>
+
+                <p>
+                    Find the right opportunity.<br>
+                    Build your career.
+                </p>
+
+                <div class="brand-features">
+                    <div>✓ Discover new opportunities</div>
+                    <div>✓ Connect with great companies</div>
+                    <div>✓ Track your applications</div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Right Side -->
+        <div class="register-form-section">
+
+            <div class="register-card">
+
+                <div class="form-header">
+
+                    <span class="welcome-text">WELCOME</span>
+
+                    <h2>Create your account</h2>
+
+                    <p>
+                        Get started with Job Portal today.
+                    </p>
+
+                </div>
+
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                   <p>
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    {{ form.username.errors }}
+</p>
+
+<p>
+    {{ form.email.label_tag }}
+    {{ form.email }}
+    {{ form.email.errors }}
+</p>
+
+<p>
+    {{ form.password1.label_tag }}
+
+    <span class="password-wrapper">
+        {{ form.password1 }}
+        <button type="button" class="show-password"
+                onclick="togglePassword('id_password1', this)">
+            Show
+        </button>
+    </span>
+
+    {{ form.password1.errors }}
+</p>
+
+<p>
+    {{ form.password2.label_tag }}
+
+    <span class="password-wrapper">
+        {{ form.password2 }}
+        <button type="button" class="show-password"
+                onclick="togglePassword('id_password2', this)">
+            Show
+        </button>
+    </span>
+
+    {{ form.password2.errors }}
+</p>
+
+<p>
+    {{ form.role.label_tag }}
+    {{ form.role }}
+    {{ form.role.errors }}
+</p>
+
+                    <button type="submit" class="register-button">
+                        Create Account
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+
+                <div class="form-footer">
+
+                    <p>
+                        Already have an account?
+                        <a href="{% url 'login' %}">Login</a>
+                    </p>
+
+                    <a class="home-link" href="{% url 'home' %}">
+                        ← Back to Home
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

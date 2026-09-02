@@ -1,0 +1,339 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recruiter Dashboard | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="dashboard-page recruiter-dashboard-page">
+
+    <!-- =========================
+         NAVBAR
+         ========================= -->
+
+    <nav class="dashboard-navbar">
+
+        <div class="dashboard-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="dashboard-nav-links">
+
+            <a href="{% url 'my_jobs' %}">
+                My Jobs
+            </a>
+
+            <a href="{% url 'job_list' %}">
+                Browse Jobs
+            </a>
+
+            <a href="{% url 'recruiter' %}">
+                My Profile
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="logout-button">
+                    Logout
+                </button>
+
+            </form>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
+
+    <main class="dashboard-container">
+
+
+        <!-- =========================
+             DASHBOARD HEADER
+             ========================= -->
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <span class="dashboard-label">
+                    RECRUITER DASHBOARD
+                </span>
+
+                <h1>
+                    Welcome back 👋
+                </h1>
+
+                <p>
+                    Manage your job postings and track candidate applications.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'job_create' %}" class="browse-button">
+                + Create Job
+            </a>
+
+        </div>
+
+
+        <!-- =========================
+             STATISTICS
+             ========================= -->
+
+        <div class="stats-grid">
+
+
+            <!-- Total Jobs -->
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    Total Jobs
+                </span>
+
+                <strong>
+                    {{ total_count }}
+                </strong>
+
+            </div>
+
+
+            <!-- Total Applicants -->
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    Total Applicants
+                </span>
+
+                <strong>
+                    {{ total_applicants }}
+                </strong>
+
+            </div>
+
+
+            <!-- Pending -->
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    Pending
+                </span>
+
+                <strong>
+                    {{ pending_count }}
+                </strong>
+
+            </div>
+
+
+            <!-- Accepted -->
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    Accepted
+                </span>
+
+                <strong>
+                    {{ accepted_count }}
+                </strong>
+
+            </div>
+
+
+            <!-- Rejected -->
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    Rejected
+                </span>
+
+                <strong>
+                    {{ rejected_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             RECENT APPLICATIONS
+             ========================= -->
+
+        <section class="recent-section">
+
+
+            <!-- Section Header -->
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="dashboard-label">
+                        ACTIVITY
+                    </span>
+
+                    <h2>
+                        Recent Applications
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'my_jobs' %}">
+                    View My Jobs →
+                </a>
+
+            </div>
+
+
+            <!-- =========================
+                 APPLICATION LIST
+                 ========================= -->
+
+            {% if orderby %}
+
+                <div class="recruiter-application-list">
+
+                    {% for application in orderby %}
+
+
+                        <div class="recruiter-application-card">
+
+
+                            <!-- Applicant -->
+
+                            <div class="recruiter-applicant">
+
+                                <div class="applicant-avatar">
+
+                                    {{ application.candidate.user.username|first|upper }}
+
+                                </div>
+
+
+                                <div>
+
+                                    <h3>
+                                        {{ application.candidate.user.username }}
+                                    </h3>
+
+                                    <p>
+                                        Applied for {{ application.job.title }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Application Details -->
+
+                            <div class="recruiter-application-meta">
+
+
+                                <!-- Status -->
+
+                                <div>
+
+                                    <span class="meta-label">
+                                        Status
+                                    </span>
+
+                                    <span class="status status-{{ application.status|lower }}">
+                                        {{ application.status }}
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Applied Date -->
+
+                                <div class="application-date">
+
+                                    <span class="meta-label">
+                                        Applied
+                                    </span>
+
+                                    <span>
+                                        {{ application.applied_at|date:"d M Y" }}
+                                    </span>
+
+                                </div>
+
+
+                                <!-- View Applicants -->
+
+                                <a
+                                    href="{% url 'view_applicants' application.job.id %}"
+                                    class="view-applicants-button"
+                                >
+                                    View Applicants →
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- =========================
+                     EMPTY STATE
+                     ========================= -->
+
+                <div class="empty-state">
+
+                    <h3>
+                        No applications yet
+                    </h3>
+
+                    <p>
+                        Applications from candidates will appear here.
+                    </p>
+
+                    <a href="{% url 'job_create' %}">
+                        Create a Job →
+                    </a>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+    </main>
+
+
+</body>
+
+</html>

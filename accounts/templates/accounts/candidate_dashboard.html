@@ -1,0 +1,161 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Candidate Dashboard | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="dashboard-page">
+
+    <!-- Navbar -->
+    <nav class="dashboard-navbar">
+
+        <div class="dashboard-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="dashboard-nav-links">
+            <a href="{% url 'job_list' %}">Browse Jobs</a>
+            <a href="{% url 'my_applications' %}">My Applications</a>
+            <a href="{% url 'candidate' %}">My Profile</a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+
+        <!-- Header -->
+        <div class="dashboard-header">
+
+            <div>
+                <span class="dashboard-label">CANDIDATE DASHBOARD</span>
+
+                <h1>Welcome back 👋</h1>
+
+                <p>
+                    Track your job applications and discover new opportunities.
+                </p>
+            </div>
+
+            <a href="{% url 'job_list' %}" class="browse-button">
+                Browse Jobs →
+            </a>
+
+        </div>
+
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <span class="stat-title">Total Applications</span>
+                <strong>{{ total_count }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-title">Pending</span>
+                <strong>{{ pending_count }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-title">Accepted</span>
+                <strong>{{ accepted_count }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-title">Rejected</span>
+                <strong>{{ rejected_count }}</strong>
+            </div>
+
+        </div>
+
+
+        <!-- Recent Applications -->
+        <section class="recent-section">
+
+            <div class="section-header">
+
+                <div>
+                    <span class="dashboard-label">ACTIVITY</span>
+                    <h2>Recent Applications</h2>
+                </div>
+
+                <a href="{% url 'my_applications' %}">
+                    View All →
+                </a>
+
+            </div>
+
+
+            {% if orderby %}
+
+                <div class="application-list">
+
+                    {% for application in orderby %}
+
+                        <div class="application-card">
+
+                            <div class="application-info">
+
+                                <h3>
+                                    {{ application.job.title }}
+                                </h3>
+
+                                <p>
+                                    Applied on
+                                    {{ application.applied_at|date:"d M Y" }}
+                                </p>
+
+                            </div>
+
+
+                            <span class="status status-{{ application.status|lower }}">
+                                {{ application.status }}
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <h3>No applications yet</h3>
+
+                    <p>
+                        You haven't applied for any jobs yet.
+                    </p>
+
+                    <a href="{% url 'job_list' %}">
+                        Explore Jobs →
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Applicants | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="applicants-page">
+
+    <nav class="applicants-navbar">
+
+        <div class="applicants-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="applicants-nav-links">
+
+            <a href="{% url 'recruiter_dashboard' %}">
+                Dashboard
+            </a>
+
+            <a href="{% url 'my_jobs' %}">
+                My Jobs
+            </a>
+
+            <a href="{% url 'job_list' %}">
+                Browse Jobs
+            </a>
+
+            <a href="{% url 'recruiter' %}">
+                My Profile
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="applicants-logout">
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+    </nav>
+
+
+    <main class="applicants-container">
+
+        <div class="applicants-header">
+
+            <div>
+                <span class="applicants-label">
+                    RECRUITER
+                </span>
+
+                <h1>Applicants</h1>
+
+                <p>
+                    Review candidate profiles and manage application status.
+                </p>
+            </div>
+
+            <a href="{% url 'my_jobs' %}" class="back-jobs-button">
+                ← Back to My Jobs
+            </a>
+
+        </div>
+
+
+        {% if applicants %}
+
+            <div class="applicants-list">
+
+                {% for applicant in applicants %}
+
+                    <article class="applicant-card">
+
+                        <div class="applicant-card-header">
+
+                            <div class="applicant-profile">
+
+                                <div class="applicant-avatar">
+                                    {{ applicant.candidate.user.username|first|upper }}
+                                </div>
+
+                                <div>
+                                    <h2>
+                                        {{ applicant.candidate.user.username }}
+                                    </h2>
+
+                                    <p>
+                                        Applied for this position
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <span class="status status-{{ applicant.status|lower }}">
+                                {{ applicant.status }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="applicant-details">
+
+                            <div class="applicant-detail">
+
+                                <span class="detail-label">
+                                    Skills
+                                </span>
+
+                                <strong>
+                                    {{ applicant.candidate.skills }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="applicant-detail">
+
+                                <span class="detail-label">
+                                    Education
+                                </span>
+
+                                <strong>
+                                    {{ applicant.candidate.education }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="applicant-detail">
+
+                                <span class="detail-label">
+                                    Experience
+                                </span>
+
+                                <strong>
+                                    {{ applicant.candidate.experience }} years
+                                </strong>
+
+                            </div>
+
+
+                            <div class="applicant-detail">
+
+                                <span class="detail-label">
+                                    Applied On
+                                </span>
+
+                                <strong>
+                                    {{ applicant.applied_at|date:"d M Y" }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="applicant-card-footer">
+
+                            {% if applicant.candidate.resume %}
+
+                                <a href="{{ applicant.candidate.resume.url }}"
+                                   target="_blank"
+                                   class="resume-button">
+                                    View Resume →
+                                </a>
+
+                            {% else %}
+
+                                <span class="no-resume">
+                                    No resume uploaded
+                                </span>
+
+                            {% endif %}
+
+
+                            <form method="POST"
+                                  action="{% url 'update_status' application_id=applicant.id %}"
+                                  class="status-form">
+
+                                {% csrf_token %}
+
+                                <label for="status-{{ applicant.id }}">
+                                    Application Status
+                                </label>
+
+                                <select name="status"
+                                        id="status-{{ applicant.id }}">
+
+                                    <option value="Pending"
+                                        {% if applicant.status == "Pending" %}selected{% endif %}>
+                                        Pending
+                                    </option>
+
+                                    <option value="Accepted"
+                                        {% if applicant.status == "Accepted" %}selected{% endif %}>
+                                        Accepted
+                                    </option>
+
+                                    <option value="Rejected"
+                                        {% if applicant.status == "Rejected" %}selected{% endif %}>
+                                        Rejected
+                                    </option>
+
+                                </select>
+
+                                <button type="submit" class="update-status-button">
+                                    Update Status
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="applicants-empty">
+
+                <div class="applicants-empty-icon">
+                    👥
+                </div>
+
+                <h2>No applicants yet</h2>
+
+                <p>
+                    Candidates who apply for this job will appear here.
+                </p>
+
+                <a href="{% url 'my_jobs' %}" class="back-jobs-button">
+                    ← Back to My Jobs
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>
