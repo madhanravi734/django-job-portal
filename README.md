@@ -194,19 +194,26 @@ For production deployment, additional hardening should be configured, including 
 
 ## Screenshots
 
-Add screenshots of the main pages to a `screenshots/` directory and reference them here.
+### Home Page
+![Home Page](screenshots/Home.PNG)
 
-Recommended screenshots:
-- Home page
-- Candidate dashboard
-- Job listing
-- Job detail
-- My applications
-- Recruiter dashboard
-- My jobs
-- Applicants page
-- Recruiter profile
+### Login
+![Login Page](screenshots/Login.PNG)
 
+### Register
+![Register Page](screenshots/Register.PNG)
+
+### Job Listings
+![Job List](screenshots/Job%20List.PNG)
+
+### Candidate Dashboard
+![Candidate Dashboard](screenshots/Candidate%20Dashboard.PNG)
+
+### Recruiter Dashboard
+![Recruiter Dashboard](screenshots/Recruiter%20Dashboard.PNG)
+
+### Applicants Page
+![Applicants Page](screenshots/Applicants%20Page.PNG)
 ## Future Improvements
 
 - Django REST Framework API
