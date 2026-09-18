@@ -1,85 +1,195 @@
 # Job Portal
 
-A full-stack job portal built with Django that provides separate workflows for candidates and recruiters. Candidates can create profiles, browse jobs, apply, and track applications, while recruiters can create and manage jobs, review applicants, and update application statuses.
+A full-stack job portal built with Django and Django REST Framework.
+
+Candidates can create profiles, upload resumes, browse jobs, apply for jobs, and track their applications. Recruiters can create and manage job postings, view applicants, and update application statuses.
+
+The project also provides REST APIs with JWT authentication, role-based permissions, validation, pagination, search, filtering, ordering, and Swagger/OpenAPI documentation.
 
 ## Features
 
 ### Candidate
-- Candidate registration and authentication
-- Candidate profile management
+
+- Registration and authentication
+- Profile management
 - Resume upload
-- Browse available jobs
-- View job details
+- Browse and view jobs
 - Apply for jobs
 - Duplicate application prevention
-- View submitted applications and statuses
-- Logout
+- Track application status
 
 ### Recruiter
-- Recruiter registration and authentication
-- Company profile management
-- Recruiter dashboard with application statistics
-- Create, edit, and delete jobs
-- View recruiter-owned jobs
-- View applicants for owned jobs
-- View candidate resumes
-- Accept/reject/pending application status management
-- Logout
 
-### Access control
-- Candidate and recruiter workflows are separated
-- Recruiters can manage only their own jobs and applicants
-- Candidates cannot access recruiter management actions
-- Duplicate candidate/job applications are prevented at the database level
-- POST forms use Django CSRF protection
-- Protected pages use authentication checks and cache-control protection
+- Registration and authentication
+- Company profile management
+- Recruiter dashboard
+- Create, edit, and delete jobs
+- Manage own job postings
+- View applicants
+- View candidate resumes
+- Update application status
+
+### REST API
+
+- Job CRUD APIs
+- Application APIs
+- JWT authentication
+- Role-based permissions
+- Serializer validation
+- Pagination
+- Search
+- Location filtering
+- Ordering
 
 ## Tech Stack
 
-- **Backend:** Python, Django
-- **Frontend:** HTML, CSS, JavaScript
-- **Database:** SQLite for local development
-- **Authentication:** Django built-in authentication
-- **ORM:** Django ORM
-- **File uploads:** Django media handling
+- Python
+- Django
+- Django REST Framework
+- PostgreSQL
+- HTML
+- CSS
+- JavaScript
+- JWT Authentication
+- Swagger / OpenAPI
+- ReDoc
+- Postman
+- Git & GitHub
+- python-dotenv
 
 ## Project Structure
 
 ```text
 JobPortal/
-├── JobPortal/          # Project configuration
-├── accounts/           # Authentication and candidate/recruiter profiles
-├── jobs/               # Job creation, browsing and management
-├── applications/       # Applications and applicant status management
-├── templates/          # Shared templates
+├── JobPortal/
+├── accounts/
+├── jobs/
+├── applications/
+├── templates/
 ├── static/
-│   ├── css/
-│   └── js/
 ├── manage.py
 ├── requirements.txt
 ├── .env.example
-└── README.md
+├── .gitignore
+├── README.md
+└── LICENSE
 ```
+
+## REST API Endpoints
+
+### Jobs
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/jobs/job_list_api/` | List jobs |
+| POST | `/jobs/job_list_api/` | Create a job |
+| GET | `/jobs/job_detail_api/<job_id>/` | Get job details |
+| PUT | `/jobs/job_detail_api/<job_id>/` | Update a job |
+| PATCH | `/jobs/job_detail_api/<job_id>/` | Partially update a job |
+| DELETE | `/jobs/job_detail_api/<job_id>/` | Delete a job |
+
+### Applications
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/applications/apply_job_api/<job_id>/` | Apply for a job |
+| GET | `/applications/application_list_api/` | List applications |
+| GET | `/applications/application_detail_api/<application_id>/` | Get application details |
+| PATCH | `/applications/application_detail_api/<application_id>/` | Update application |
+
+## API Features
+
+### Authentication
+
+REST APIs use JWT authentication.
+
+Authenticated requests use:
+
+```text
+Authorization: Bearer <access_token>
+```
+
+### Authorization
+
+Role-based permissions restrict candidate and recruiter operations.
+
+### Search
+
+Jobs can be searched by title, description, or skills.
+
+Example:
+
+```text
+/jobs/job_list_api/?search=python
+```
+
+### Location Filtering
+
+```text
+/jobs/job_list_api/?location=Chennai
+```
+
+### Ordering
+
+```text
+/jobs/job_list_api/?ordering=salary
+/jobs/job_list_api/?ordering=-salary
+/jobs/job_list_api/?ordering=created_at
+/jobs/job_list_api/?ordering=-created_at
+```
+
+### Pagination
+
+```text
+/jobs/job_list_api/?page=2
+```
+
+## API Documentation
+
+### Swagger UI
+
+`http://127.0.0.1:8000/api/docs/`
+
+### OpenAPI Schema
+
+`http://127.0.0.1:8000/api/schema/`
+
+### ReDoc
+
+`http://127.0.0.1:8000/api/redoc/`
+
+## Database
+
+The project uses PostgreSQL.
+
+### Main Models
+
+- CandidateProfile
+- RecruiterProfile
+- Job
+- Application
+
+The `Application` model prevents duplicate applications for the same candidate and job.
 
 ## Getting Started
 
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd JobPortal
+git clone https://github.com/madhanravi734/django-job-portal.git
+cd django-job-portal
 ```
 
 ### 2. Create a virtual environment
 
-Windows:
+#### Windows
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-macOS/Linux:
+#### macOS/Linux
 
 ```bash
 python3 -m venv .venv
@@ -89,28 +199,52 @@ source .venv/bin/activate
 ### 3. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ### 4. Configure environment variables
 
-Copy `.env.example` to `.env` and set a strong `DJANGO_SECRET_KEY` for anything beyond local development.
+Create a `.env` file in the project root using `.env.example` as a template.
 
-For local development, the project also has a development fallback secret so it can start without extra configuration. Do **not** use that fallback in production.
+Configure your environment variables:
 
-### 5. Apply migrations
+```text
+SECRET_KEY=your_secret_key
+
+DB_NAME=jobportal_db
+DB_USER=postgres
+DB_PASSWORD=your_postgresql_password
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+Do not commit `.env` to GitHub.
+
+### 5. Create the PostgreSQL database
+
+Create a PostgreSQL database named:
+
+```text
+jobportal_db
+```
+
+Make sure PostgreSQL is running and the credentials in `.env` match your local PostgreSQL configuration.
+
+### 6. Apply migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 6. Create an admin account (optional)
+### 7. Create an admin account
+
+Optional:
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Start the development server
+### 8. Start the development server
 
 ```bash
 python manage.py runserver
@@ -122,7 +256,7 @@ Open:
 http://127.0.0.1:8000/
 ```
 
-## Main Routes
+## Main Web Routes
 
 | Area | Route |
 |---|---|
@@ -134,17 +268,6 @@ http://127.0.0.1:8000/
 | Browse Jobs | `/jobs/job_list/` |
 | My Jobs | `/jobs/my_jobs/` |
 | My Applications | `/applications/my-applications/` |
-
-## Data Model
-
-The application uses four main domain models:
-
-- **CandidateProfile** — candidate information and resume
-- **RecruiterProfile** — company information
-- **Job** — job postings owned by recruiters
-- **Application** — links candidates to jobs and stores application status
-
-The `Application` model enforces a unique candidate/job combination, preventing the same candidate from applying to the same job more than once.
 
 ## Candidate Workflow
 
@@ -188,50 +311,61 @@ Logout
 
 ## Security & Authorization
 
-The project includes ownership and role-based access checks around recruiter and candidate workflows. Recruiters can only edit/delete their own jobs and view/update applications belonging to their own jobs. Candidates cannot access recruiter management operations.
-
-For production deployment, additional hardening should be configured, including secure cookies, HTTPS, production `ALLOWED_HOSTS`, `DEBUG=False`, a production secret key, and a production database.
+- JWT authentication for REST APIs
+- Role-based access control
+- Recruiters can manage only their own jobs
+- Recruiters can access applications belonging to their own jobs
+- Candidates cannot perform recruiter-only operations
+- Duplicate applications are prevented at the database level
+- Django CSRF protection for web forms
+- Sensitive configuration is stored using environment variables
 
 ## Screenshots
 
 ### Home Page
+
 ![Home Page](screenshots/Home.PNG)
 
 ### Login
+
 ![Login Page](screenshots/Login.PNG)
 
 ### Register
+
 ![Register Page](screenshots/Register.PNG)
 
 ### Job Listings
+
 ![Job List](screenshots/Job%20List.PNG)
 
 ### Candidate Dashboard
+
 ![Candidate Dashboard](screenshots/Candidate%20Dashboard.PNG)
 
 ### Recruiter Dashboard
+
 ![Recruiter Dashboard](screenshots/Recruiter%20Dashboard.PNG)
 
 ### Applicants Page
+
 ![Applicants Page](screenshots/Applicants%20Page.PNG)
+
 ## Future Improvements
 
-- Django REST Framework API
-- PostgreSQL for production
-- Search and filtering
-- Pagination
+- React frontend integration
 - Email notifications
 - Password reset flow
-- Recruiter/candidate role permissions using dedicated authorization classes
-- Production deployment with a cloud platform
-- Automated tests with broader coverage
+- Automated API testing
+- Production deployment
 - Improved resume/document validation
+- Additional API filtering
+- API rate limiting
 
 ## Author
 
 **Madhan Ravi**
 
-Software Engineer Intern | Python | Django | React | TypeScript
+Software Engineer Intern | Python | Django | Django REST Framework | React | TypeScript
 
 ## License
 
