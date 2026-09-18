@@ -1,0 +1,317 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Jobs | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="my-jobs-page">
+
+    <!-- =========================
+         NAVBAR
+         ========================= -->
+
+    <nav class="my-jobs-navbar">
+
+        <div class="my-jobs-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="my-jobs-nav-links">
+
+            <a href="{% url 'recruiter_dashboard' %}">
+                Dashboard
+            </a>
+
+            <a href="{% url 'job_list' %}">
+                Browse Jobs
+            </a>
+
+            <a href="{% url 'recruiter' %}">
+                My Profile
+            </a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="my-jobs-logout">
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
+
+    <main class="my-jobs-container">
+
+
+        <!-- =========================
+             HEADER
+             ========================= -->
+
+        <div class="my-jobs-header">
+
+            <div>
+
+                <span class="my-jobs-label">
+                    RECRUITER
+                </span>
+
+                <h1>
+                    My Jobs
+                </h1>
+
+                <p>
+                    Manage your job postings and review applications.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'job_create' %}" class="create-job-button">
+                + Create Job
+            </a>
+
+        </div>
+
+
+        <!-- =========================
+             JOB LIST
+             ========================= -->
+
+        {% if jobs %}
+
+            <div class="my-jobs-list">
+
+                {% for job in jobs %}
+
+                    <article class="my-job-card">
+
+
+                        <!-- Job Header -->
+
+                        <div class="my-job-header">
+
+                            <div>
+
+                                <a
+                                    href="{% url 'job_detail' job.id %}"
+                                    class="my-job-title"
+                                >
+                                    {{ job.title }}
+                                </a>
+
+                                <p class="my-job-company">
+                                    {{ job.recruiter.company_name }}
+                                </p>
+
+                            </div>
+
+                            <span class="my-job-type">
+                                Full Time
+                            </span>
+
+                        </div>
+
+
+                        <!-- Job Information -->
+
+                        <div class="my-job-info">
+
+                            <div class="my-job-info-item">
+
+                                <span class="info-icon">
+                                    📍
+                                </span>
+
+                                <div>
+                                    <span class="info-label">
+                                        Location
+                                    </span>
+
+                                    <strong>
+                                        {{ job.location }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="my-job-info-item">
+
+                                <span class="info-icon">
+                                    💰
+                                </span>
+
+                                <div>
+                                    <span class="info-label">
+                                        Salary
+                                    </span>
+
+                                    <strong>
+                                        ₹{{ job.salary }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="my-job-info-item">
+
+                                <span class="info-icon">
+                                    📅
+                                </span>
+
+                                <div>
+                                    <span class="info-label">
+                                        Posted
+                                    </span>
+
+                                    <strong>
+                                        {{ job.created_at|date:"d M Y" }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="my-job-description">
+
+                            <p>
+                                {{ job.description|truncatewords:30 }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Skills -->
+
+                        <div class="my-job-skills">
+
+                            {% for skill in job.skills.split %}
+
+                                <span>
+                                    {{ skill }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- Actions -->
+
+                        <div class="my-job-actions">
+
+
+                            <a
+                                href="{% url 'job_detail' job.id %}"
+                                class="job-view-button"
+                            >
+                                View Job
+                            </a>
+
+
+                            <a
+                                href="{% url 'view_applicants' job.id %}"
+                                class="applicants-button"
+                            >
+                                View Applicants
+                            </a>
+
+
+                            <a
+                                href="{% url 'edit_job' job.id %}"
+                                class="job-edit-button"
+                            >
+                                Edit
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'delete_job' job.id %}"
+                                class="delete-job-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="job-delete-button"
+                                    onclick="return confirm('Are you sure you want to delete this job?');"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =========================
+                 EMPTY STATE
+                 ========================= -->
+
+            <div class="my-jobs-empty">
+
+                <div class="my-jobs-empty-icon">
+                    💼
+                </div>
+
+                <h2>
+                    No jobs posted yet
+                </h2>
+
+                <p>
+                    You haven't created any job postings.
+                    Start by creating your first job.
+                </p>
+
+                <a
+                    href="{% url 'job_create' %}"
+                    class="create-job-button"
+                >
+                    + Create Your First Job
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </main>
+
+</body>
+
+</html>

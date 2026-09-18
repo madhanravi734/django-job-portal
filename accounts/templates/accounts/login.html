@@ -1,0 +1,128 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="login-page">
+
+    <div class="login-wrapper">
+
+        <!-- Left Side -->
+        <div class="login-brand">
+
+            <div class="brand-content">
+
+                <div class="brand-logo">JP</div>
+
+                <h1>Job Portal</h1>
+
+                <p>
+                    Welcome back.<br>
+                    Your next opportunity awaits.
+                </p>
+
+                <div class="brand-features">
+                    <div>✓ Discover new opportunities</div>
+                    <div>✓ Connect with great companies</div>
+                    <div>✓ Track your applications</div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Right Side -->
+        <div class="login-form-section">
+
+            <div class="login-card">
+
+                <div class="form-header">
+
+                    <span class="welcome-text">WELCOME BACK</span>
+
+                    <h2>Sign in to your account</h2>
+
+                    <p>
+                        Enter your credentials to continue.
+                    </p>
+
+                </div>
+
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <p>
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                        {{ form.username.errors }}
+                    </p>
+
+
+                    <p>
+                        {{ form.password.label_tag }}
+
+                        <span class="password-wrapper">
+                            {{ form.password }}
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                onclick="togglePassword('id_password', this)">
+                                Show
+                            </button>
+                        </span>
+
+                        {{ form.password.errors }}
+                    </p>
+
+
+                    {% if form.non_field_errors %}
+                        <div class="form-errors">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+
+                    <button type="submit" class="login-button">
+                        Login
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+
+                <div class="form-footer">
+
+                    <p>
+                        Don't have an account?
+                        <a href="{% url 'register' %}">Create one</a>
+                    </p>
+
+                    <a class="home-link" href="{% url 'home' %}">
+                        ← Back to Home
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

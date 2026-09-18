@@ -1,0 +1,238 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ job.title }} | Job Portal</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="job-detail-page">
+
+    <!-- Navbar -->
+    <nav class="job-detail-navbar">
+
+        <div class="job-detail-logo">
+            <span>JP</span>
+            Job Portal
+        </div>
+
+        <div class="job-detail-nav-links">
+
+            <a href="{% url 'job_list' %}">
+                Browse Jobs
+            </a>
+
+            {% if request.user.is_authenticated %}
+
+                {% if request.user.candidateprofile %}
+
+                    <a href="{% url 'candidate_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'my_applications' %}">
+                        My Applications
+                    </a>
+
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="job-detail-logout">
+                            Logout
+                        </button>
+                    </form>
+
+                {% elif request.user.recruiterprofile %}
+
+                    <a href="{% url 'recruiter_dashboard' %}">
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'my_jobs' %}">
+                        My Jobs
+                    </a>
+
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="job-detail-logout">
+                            Logout
+                        </button>
+                    </form>
+
+                {% endif %}
+
+            {% else %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}" class="job-detail-register">
+                    Register
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="job-detail-container">
+
+        <!-- Back Link -->
+        <a href="{% url 'job_list' %}" class="back-to-jobs">
+            ← Back to Browse Jobs
+        </a>
+
+
+        <!-- Job Header -->
+        <section class="job-detail-header">
+
+            <div class="job-detail-title-section">
+
+                <span class="job-detail-label">
+                    JOB OPPORTUNITY
+                </span>
+
+                <h1>{{ job.title }}</h1>
+
+                <p class="job-detail-company">
+                    {{ job.recruiter.company_name }}
+                </p>
+
+            </div>
+
+            <div class="job-detail-badge">
+                Full Time
+            </div>
+
+        </section>
+
+
+        <!-- Job Information -->
+        <div class="job-detail-layout">
+
+            <!-- Main Job Content -->
+            <div class="job-detail-main">
+
+                <section class="detail-section">
+
+                    <h2>Job Description</h2>
+
+                    <p>
+                        {{ job.description }}
+                    </p>
+
+                </section>
+
+
+                <section class="detail-section">
+
+                    <h2>Required Skills</h2>
+
+                    <div class="detail-skills">
+
+                        {% for skill in job.skills.split %}
+                            <span>{{ skill }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- Sidebar -->
+            <aside class="job-detail-sidebar">
+
+                <div class="job-summary-card">
+
+                    <h2>Job Overview</h2>
+
+                    <div class="overview-item">
+
+                        <span>📍 Location</span>
+
+                        <strong>
+                            {{ job.location }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-item">
+
+                        <span>💰 Salary</span>
+
+                        <strong>
+                            ₹{{ job.salary }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-item">
+
+                        <span>🏢 Company</span>
+
+                        <strong>
+                            {{ job.recruiter.company_name }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="overview-item">
+
+                        <span>📅 Posted</span>
+
+                        <strong>
+                            {{ job.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+
+                    {% if request.user.is_authenticated %}
+
+                        {% if request.user.candidateprofile %}
+
+                            <a href="{% url 'apply_job' job.id %}"
+                               class="apply-job-button">
+                                Apply for this Job →
+                            </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <a href="{% url 'login' %}"
+                           class="apply-job-button">
+                            Login to Apply →
+                        </a>
+
+                    {% endif %}
+
+
+                    <a href="{% url 'job_list' %}"
+                       class="details-back-button">
+                        ← Back to Jobs
+                    </a>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

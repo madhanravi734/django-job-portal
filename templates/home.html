@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Job Portal</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Job Portal
+        </div>
+
+        <div class="nav-links">
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+
+    </nav>
+
+    <main class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Find Your Next <span>Opportunity</span>
+            </h1>
+
+            <p>
+                Discover job opportunities, apply for positions,
+                and connect with companies looking for talented people.
+            </p>
+
+            <div class="buttons">
+
+                <a href="{% url 'register' %}" class="btn btn-primary">
+                    Create Account
+                </a>
+
+                <a href="{% url 'login' %}" class="btn btn-secondary">
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
