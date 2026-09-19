@@ -29,3 +29,6 @@ Thumbs.db
 
 # Migration fixture
 data.json
+
+# PostgreSQL backups
+*.dump
