@@ -151,7 +151,7 @@ def job_list_api(request):
       allowed=['salary','created_at']
       clean_ordering = ordering.lstrip("-") if ordering else None
       paginator=PageNumberPagination()
-      joblist=Job.objects.all()
+      joblist=Job.objects.all().order_by("-created_at")
       if search:
        joblist=joblist.filter(Q(title__icontains=search) | Q(description__icontains=search )| Q(skills__icontains=search) )
       if location:

@@ -6,14 +6,11 @@ class JobSerializer(serializers.ModelSerializer):
          if value<0:
            raise serializers.ValidationError("Salary cannot be negative")
          return value
+  def validate_title(self,value):
+     if not value.strip():
+        raise serializers.ValidationError("Give valid title")
+     return value
   class Meta:
     model=Job
     fields=['recruiter','title','description','location',
             'salary','skills','created_at']
-  def validate(self,data):
-     title=data['title']
-     if not title.strip():
-        raise serializers.ValidationError("Give valid title")
-        
-     else:
-        return data
